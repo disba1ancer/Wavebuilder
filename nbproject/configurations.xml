@@ -39,6 +39,8 @@
       <itemPath>Makefile</itemPath>
     </logicalFolder>
     <itemPath>.gitignore</itemPath>
+    <itemPath>LICENSE</itemPath>
+    <itemPath>README.md</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -87,9 +89,13 @@
       </item>
       <item path="HarmonicModel.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="LICENSE" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="MainWindow.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="MainWindow.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="README.md" ex="false" tool="3" flavor2="0">
       </item>
       <item path="SoundPlayer.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -164,9 +170,13 @@
       </item>
       <item path="HarmonicModel.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="LICENSE" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="MainWindow.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="MainWindow.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="README.md" ex="false" tool="3" flavor2="0">
       </item>
       <item path="SoundPlayer.cpp" ex="false" tool="1" flavor2="0">
       </item>
