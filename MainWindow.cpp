@@ -60,7 +60,7 @@ MainWindow::MainWindow() : wxFrame(NULL, wxID_ANY, "Wavebuilder", wxDefaultPosit
 		freqMText(new wxTextCtrl(leftPanel, ID_FreqMultText)),
 		playButton(new wxButton(leftPanel, ID_PlayButton, "&Play/Stop")),
 		model(new AbstractDataModel),
-		sndPlayer(new SoundPlayer(model.get()))
+		sndPlayer(new SoundPlayer)
 {
 	split->SetSashGravity(1.);
 	split->SetMinimumPaneSize(150);
@@ -72,9 +72,10 @@ MainWindow::MainWindow() : wxFrame(NULL, wxID_ANY, "Wavebuilder", wxDefaultPosit
 	graph->setYEnd(1.f);
 	graph->setXStart(-1.f);
 	graph->setXEnd(1.f);
-	graph->setFunction([this](float val) -> float {
+	auto func = [this](float val) -> float {
 		return model->calculateY(val);
-	});
+	};
+	graph->setFunction(func);
 	
 	leftPanel->SetSizer(leftPanelSizer);
 	
@@ -86,6 +87,7 @@ MainWindow::MainWindow() : wxFrame(NULL, wxID_ANY, "Wavebuilder", wxDefaultPosit
 	model->registerObserver(dataModelGraphUpdater = [this] (AbstractDataModel::Action action, unsigned index) {
 		if (action != AbstractDataModel::ACT_DESTROY) {
 			graph->Refresh();
+			sndPlayer->update();
 		}
 	});
 	
@@ -112,10 +114,9 @@ MainWindow::MainWindow() : wxFrame(NULL, wxID_ANY, "Wavebuilder", wxDefaultPosit
 	soundPlayerSizer->Add(1,1);
 	soundPlayerSizer->Add(playButton, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxALL, 2);
 	
-	SoundPlayer* sndPlayer = this->sndPlayer.get();
-	
 	*amplMText << sndPlayer->getAmplitudeMultiplier();
 	*freqMText << sndPlayer->getFrequencyMultiplier();
+	sndPlayer->setFunction(func);
 	
 	Bind(wxEVT_BUTTON, &onAddButtonClick, this, ID_AddButton);
 	Bind(wxEVT_BUTTON, &onRemoveButtonClick, this, ID_RemoveButton);

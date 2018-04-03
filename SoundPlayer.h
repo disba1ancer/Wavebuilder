@@ -40,12 +40,12 @@ class SoundPlayer {
 public:
 	typedef int16_t Sample;
 	
-	SoundPlayer(AbstractDataModel* dataModel) noexcept;
+	SoundPlayer(const std::function<float(float)>& func = nullptr) noexcept;
 	/*SoundPlayer(const SoundPlayer& orig);
 	SoundPlayer(SoundPlayer&& orig);
 	const SoundPlayer& operator=(const SoundPlayer& orig);
-	const SoundPlayer& operator=(SoundPlayer&& orig);*/
-	~SoundPlayer() noexcept;
+	const SoundPlayer& operator=(SoundPlayer&& orig);
+	~SoundPlayer() noexcept;*/
 	void play() noexcept;
 	void stop() noexcept;
 	void update() noexcept;
@@ -54,12 +54,13 @@ public:
 	float getAmplitudeMultiplier() noexcept;
 	float getFrequencyMultiplier() noexcept;
 	bool isPlaying() noexcept;
+	void setFunction(const std::function<float(float)>& func) noexcept;
+	std::function<float(float)> getFunction() noexcept;
 private:
-	AbstractDataModel* dataModel;
 	std::unique_ptr<unsigned char[]> data;
 	Sample* sndData;
 	wxScopedPtr<wxSound> sndPlayer;
-	std::function<void(AbstractDataModel::Action, unsigned)> modelObserver;
+	std::function<float(float)> f;
 	bool isPlay;
 	float amplMult, freqMult;
 };

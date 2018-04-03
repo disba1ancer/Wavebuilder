@@ -85,17 +85,10 @@ constexpr Dst ptr_cast(Src src) {
 	return static_cast<Dst>(static_cast<void*>(src));
 }
 
-SoundPlayer::SoundPlayer(AbstractDataModel* dataModel) noexcept : dataModel(dataModel),
-		data(new unsigned char[bufferSize]),
+SoundPlayer::SoundPlayer(const std::function<float(float)>& func) noexcept : data(new unsigned char[bufferSize]),
 		sndData(0),
 		sndPlayer(0),
-		modelObserver([this](AbstractDataModel::Action action, unsigned index) -> void {
-			if (action != AbstractDataModel::ACT_DESTROY) {
-				update();
-			} else {
-				this->dataModel = 0;
-			}
-		}),
+		f(func),
 		isPlay(false),
 		amplMult(16384.f),
 		freqMult(1.f)
@@ -124,10 +117,11 @@ SoundPlayer::SoundPlayer(AbstractDataModel* dataModel) noexcept : dataModel(data
 	dataChunk->id = RIFF_WAVE_DATA;
 	dataChunk->size = mainRiffChunk->size - sizeof(riff_data_header) -
 			2 * sizeof(riff_chunk_header) - sizeof(WaveFmt);
-	dataModel->registerObserver(modelObserver);
+	
 	for (size_t i = 0; i < sps; ++i) {
-		sndData[i] = dataModel->calculateY(float(i) / float(sps));
+		sndData[i] = 0;
 	}
+	
 	sndPlayer.reset(new wxSound(bufferSize, data));
 }
 
@@ -141,14 +135,11 @@ const SoundPlayer& SoundPlayer::operator=(const SoundPlayer& orig) {
 }
 
 const SoundPlayer& SoundPlayer::operator=(SoundPlayer&& orig) {
-}*/
+}
 
 SoundPlayer::~SoundPlayer() noexcept {
 	//sndPlayer->Stop();
-	if (dataModel) {
-		dataModel->unregisterObserver(modelObserver);
-	}
-}
+}*/
 
 void SoundPlayer::play() noexcept {
 	isPlay = true;
@@ -161,12 +152,14 @@ void SoundPlayer::stop() noexcept {
 }
 
 void SoundPlayer::update() noexcept {
-	for (size_t i = 0; i < sps; ++i) {
-		sndData[i] = amplMult * dataModel->calculateY(float(i) * freqMult / float(sps));
+	if (f) {
+		for (size_t i = 0; i < sps; ++i) {
+			sndData[i] = amplMult * f(float(i) * freqMult / float(sps));
+		}
+		sndPlayer.reset(new wxSound(bufferSize, this->data.get()));
+		if (isPlay)
+			sndPlayer->Play(wxSOUND_ASYNC | wxSOUND_LOOP);
 	}
-	sndPlayer.reset(new wxSound(bufferSize, this->data.get()));
-	if (isPlay)
-		sndPlayer->Play(wxSOUND_ASYNC | wxSOUND_LOOP);
 }
 
 void SoundPlayer::changeAmplitudeMultiplier(float multiplier) noexcept {
@@ -189,5 +182,14 @@ float SoundPlayer::getFrequencyMultiplier() noexcept {
 
 bool SoundPlayer::isPlaying() noexcept {
 	return isPlay;
+}
+
+void SoundPlayer::setFunction(const std::function<float(float)>& func) noexcept {
+	f = func;
+	update();
+}
+
+std::function<float(float)> SoundPlayer::getFunction() noexcept {
+	return f;
 }
 
