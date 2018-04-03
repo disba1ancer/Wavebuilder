@@ -41,11 +41,6 @@ public:
 	typedef int16_t Sample;
 	
 	SoundPlayer(const std::function<float(float)>& func = nullptr) noexcept;
-	/*SoundPlayer(const SoundPlayer& orig);
-	SoundPlayer(SoundPlayer&& orig);
-	const SoundPlayer& operator=(const SoundPlayer& orig);
-	const SoundPlayer& operator=(SoundPlayer&& orig);
-	~SoundPlayer() noexcept;*/
 	void play() noexcept;
 	void stop() noexcept;
 	void update() noexcept;

@@ -125,22 +125,6 @@ SoundPlayer::SoundPlayer(const std::function<float(float)>& func) noexcept : dat
 	sndPlayer.reset(new wxSound(bufferSize, data));
 }
 
-/*SoundPlayer::SoundPlayer(const SoundPlayer& orig) {
-}
-
-SoundPlayer::SoundPlayer(SoundPlayer&& orig) {
-}
-
-const SoundPlayer& SoundPlayer::operator=(const SoundPlayer& orig) {
-}
-
-const SoundPlayer& SoundPlayer::operator=(SoundPlayer&& orig) {
-}
-
-SoundPlayer::~SoundPlayer() noexcept {
-	//sndPlayer->Stop();
-}*/
-
 void SoundPlayer::play() noexcept {
 	isPlay = true;
 	sndPlayer->Play(wxSOUND_ASYNC | wxSOUND_LOOP);

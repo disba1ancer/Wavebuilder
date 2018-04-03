@@ -96,7 +96,6 @@ MainWindow::MainWindow() : wxFrame(NULL, wxID_ANY, "Wavebuilder", wxDefaultPosit
 	wxObjectDataPtr<HarmonicModel> model;
 	model = new HarmonicModel(this->model.get());
 	
-	//dataView->SetWindowStyleFlag(dataView->GetWindowStyleFlag() & ~wxBORDER_MASK | wxBORDER_NONE);
 	dataView->AssociateModel(model.get());
 	dataView->AppendTextColumn("", UINT_MAX, wxDATAVIEW_CELL_INERT, 0, wxALIGN_LEFT, wxDATAVIEW_COL_HIDDEN);
 	dataView->AppendTextColumn("Frequency", HarmonicModel::COL_FREQ, wxDATAVIEW_CELL_EDITABLE, -1, wxALIGN_LEFT);
